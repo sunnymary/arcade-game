@@ -6,6 +6,24 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div id="play-interface">
+        <div id="score-bar">
+            <div id = "life">
+                <img class="icon" src="./images/Heart.png" alt="life">
+                <span id="life-count">5</span>
+            </div>
+            <div id="star">
+                <img class="icon" src="./images/Star.png" alt="star">
+                <span id="star-count">0</span>
+            </div>
+            <p id="score">score: <span id="score-count">0</span></p>
+        </div>
+        <div id="control-panel">
+            <button class="control-btn" id="start">start</button>
+            <button class="control-btn" id="pause">pause</button>
+        </div>
+    </div>
+
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>

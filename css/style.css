@@ -1,3 +1,55 @@
 body {
     text-align: center;
+    font-size: 36px;
+    font-family: Arial, sans-serif;
+}
+
+#play-interface {
+    width: 585px;
+    max-width: 100%;
+    background-color: lightgray;
+    margin: 0 auto;
+}
+
+#score-bar {
+    width: 505;
+    display: flex;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.icon {
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+#life,
+#star {
+    width: 25%;
+    display: flex;
+    align-items:center;
+    margin-top: 10px;
+}
+
+#score {
+    width: 50%;
+    text-align: right;
+    margin-bottom: 0;
+}
+
+.icon {
+    width: 50.5px;
+    height: 85.5px;
+}
+
+canva {
+    margin-top: -50px;
+}
+
+.control-btn {
+    width: 200px;
+    height: 70px;
+    margin-bottom: 30px;
+    font-size: 20px;
+    text-transform: uppercase;
 }

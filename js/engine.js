@@ -21,13 +21,16 @@ var Engine = (function(global) {
      */
     var doc = global.document,
         win = global.window,
+        playInterface = doc.getElementById("play-interface"),
+        controlPanel = doc.getElementById("control-panel"),
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
 
     canvas.width = 505;
     canvas.height = 606;
-    doc.body.appendChild(canvas);
+    // doc.body.appendChild(canvas);
+    playInterface.insertBefore(canvas,controlPanel);
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -66,7 +69,9 @@ var Engine = (function(global) {
     function init() {
         reset();
         lastTime = Date.now();
+        console.log("init");
         main();
+        console.log("init2");
     }
 
     /* This function is called by main (our game loop) and itself calls all
@@ -80,7 +85,6 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -174,6 +178,7 @@ var Engine = (function(global) {
         'images/char-boy.png'
     ]);
     Resources.onReady(init);
+    console.log("M");
 
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developers can use it more easily
@@ -181,3 +186,5 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
 })(this);
+
+console.log("O");
