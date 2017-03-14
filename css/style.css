@@ -1,7 +1,11 @@
 body {
     text-align: center;
-    font-size: 36px;
+    font-size: 30px;
     font-family: Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 #play-interface {
@@ -11,11 +15,26 @@ body {
     margin: 0 auto;
 }
 
+#title,
 #score-bar {
-    width: 505;
     display: flex;
-    margin: 0 auto;
     padding: 0 40px;
+}
+
+#title {
+    border-bottom: 1px solid white;
+    background-color: darkgray;
+    color: white;
+}
+
+#level {
+    width: 50%;
+    text-align: left;
+}
+
+#target {
+    width: 50%;
+    text-align: right;
 }
 
 .icon {
@@ -28,7 +47,6 @@ body {
     width: 25%;
     display: flex;
     align-items:center;
-    margin-top: 10px;
 }
 
 #score {
