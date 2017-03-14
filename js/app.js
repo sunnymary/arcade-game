@@ -6,6 +6,8 @@ var lifeCount = document.getElementById("life-count");
 var numLife = Number(lifeCount.textContent);
 var scoreCount = document.getElementById("score-count");
 var numScore = Number(scoreCount.textContent);
+var scoreUp = new Audio("sounds/coin.wav");
+var collision = new Audio("sounds/collision.wav")
 
 // Enemies our player must avoid
 var Enemy = function(x, y) {
@@ -57,6 +59,8 @@ Player.prototype.reset = function() {
 Player.prototype.update = function() {
     //reach the water, score up and back to start place
     if(this.y < rowH-25) {
+        //coin collect sound
+        scoreUp.play();
         //score up
         numScore += 100;
         scoreCount.textContent = numScore.toString();
@@ -70,6 +74,8 @@ Player.prototype.update = function() {
 Player.prototype.checkCollision = function(){
     for (var i = 0; i < allEnemies.length; i++) {
         if(this.y === allEnemies[i].y && this.x >= allEnemies[i].x - 50 && this.x < allEnemies[i].x + 50) {
+            //collision sound
+            collision.play();
             //player go back to original start place
             this.reset();
             //lose one life
