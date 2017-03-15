@@ -21,7 +21,6 @@
              */
             urlOrArr.forEach(function(url) {
                 _load(url);
-                console.log("url");
             });
         } else {
             /* The developer did not pass an array to this function,

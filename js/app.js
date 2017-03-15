@@ -6,8 +6,11 @@ var lifeCount = document.getElementById("life-count");
 var numLife = Number(lifeCount.textContent);
 var scoreCount = document.getElementById("score-count");
 var numScore = Number(scoreCount.textContent);
-var scoreUp = new Audio("sounds/coin.wav");
-var collision = new Audio("sounds/collision.wav")
+//audio source: http://opengameart.org/content/rpg-sound-pack
+var scoreUpSound = new Audio("sounds/coin.wav");
+var collisionSound = new Audio("sounds/collision.wav")
+var winGame = false;
+var loseGame = false;
 
 // Enemies our player must avoid
 var Enemy = function(x, y) {
@@ -40,9 +43,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// player's contruction funciton
 var Player = function() {
     // The image/sprite for our player
     this.sprite = 'images/char-boy.png';
@@ -51,22 +52,47 @@ var Player = function() {
     this.y = rowH*5-25;
 };
 
+//reset player's location
 Player.prototype.reset = function() {
     this.x = colW*2;
     this.y = rowH*5-25;
 };
 
-Player.prototype.update = function() {
-    //reach the water, score up and back to start place
+Player.prototype.checkWin = function() {
+    if (numScore >= 300) {
+        //change to win status
+        winGame = true;
+    }
+}
+
+//condition and setting if get score
+Player.prototype.getScore = function() {
+    //reach the water(get score), score up and back to start place
     if(this.y < rowH-25) {
         //coin collect sound
-        scoreUp.play();
+        scoreUpSound.play();
+        //check win;
+        this.checkWin();
         //score up
-        numScore += 100;
-        scoreCount.textContent = numScore.toString();
+        if(!winGame) {
+            numScore += 100;
+            scoreCount.textContent = numScore.toString();
+
+            //check win;
+            this.checkWin();
+            if(winGame) {
+                stopGame();
+            }
+        }
         //player back to start place
         this.reset();
     }
+}
+
+//update player
+Player.prototype.update = function() {
+    //check if get score
+    this.getScore();
     //handle collision
     this.checkCollision();
 };
@@ -75,7 +101,7 @@ Player.prototype.checkCollision = function(){
     for (var i = 0; i < allEnemies.length; i++) {
         if(this.y === allEnemies[i].y && this.x >= allEnemies[i].x - 50 && this.x < allEnemies[i].x + 50) {
             //collision sound
-            collision.play();
+            collisionSound.play();
             //player go back to original start place
             this.reset();
             //lose one life
@@ -83,6 +109,7 @@ Player.prototype.checkCollision = function(){
             lifeCount.textContent = numLife.toString();
             //check if loose all the life
             if(numLife <= 0) {
+                loseGame = true;
                 stopGame();
             }
         }
@@ -92,8 +119,6 @@ Player.prototype.checkCollision = function(){
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-
-console.log("A");
 
 Player.prototype.handleInput = function(key) {
     //move left - one colW per move
@@ -128,10 +153,13 @@ Player.prototype.handleInput = function(key) {
     }
 };
 
-
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [];
+
+// Place the player object in a variable called player
+var player = new Player();
+
 
 //function to make enemys with random X coordinate(-499 to 0)
 function generateRandomX() {
@@ -183,9 +211,6 @@ function clearEnemies() {
 }
 
 
-// Place the player object in a variable called player
-var player = new Player();
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -219,6 +244,8 @@ function startGame(){
     //reset score to 0
     numScore = 0;
     scoreCount.textContent = numScore.toString();
+    winGame = false;
+    loseGame = false;
 
     //enable keys to move player
     enableKeys();
@@ -275,8 +302,19 @@ function stopGame() {
     //2.disable the player's movement
     disableKeys();
 
-    //3.Game over notice
-    alert("Game Over ... You final score is " + numScore + "! Click RESTART to play again");
+    //3. game over notice
+    //will be handled in engine.js.
+    //because need to render after canvas base
+
+    // //3.Game over notice
+    // player.checkWin();
+
+    // if(!winGame) {
+    //     createCanvasText("Game Over ... You final score is " + numScore + "! Click RESTART to play again");
+    // } else if (winGame) {
+    //     alert("congrats!");
+    //     win = false;
+    // }
 }
 
 //START/RESTART game
@@ -288,6 +326,8 @@ startButton.addEventListener("click", startGame);
 document.addEventListener("keyup",function(e){
     console.log(e.keyCode);
     if(e.keyCode === 13) {
+        console.log(e);
+        e.preventDefault();
         startGame();
     };
 });
@@ -304,6 +344,8 @@ pauseButton.addEventListener("click", pauseOrContinueGame);
 //3.add key event: press "space" key to pause/continue
 document.addEventListener("keyup",function(e){
     if(e.keyCode === 32) {
+        console.log(e);
+        e.preventDefault();
         pauseOrContinueGame();
     };
 });
