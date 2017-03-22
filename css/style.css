@@ -1,23 +1,31 @@
 body {
     text-align: center;
     font-size: 30px;
-    font-family: Arial, sans-serif;
+    font-family: Anton, sans-serif;
 }
 
 * {
     box-sizing: border-box;
 }
 
+.flex {
+    display: flex;
+    max-width: 100%;
+}
+
+.center {
+    justify-content:center;
+}
+
 #play-interface {
     width: 585px;
     max-width: 100%;
     background-color: lightgray;
-    margin: 0 auto;
+   /* margin: 0 auto;*/
 }
 
 #title,
 #score-bar {
-    display: flex;
     padding: 0 40px;
 }
 
@@ -32,12 +40,26 @@ body {
     margin: 20px 0;
 }
 
-#level {
+#target {
     text-align: left;
+    text-transform: uppercase;
 }
 
-#target {
+#instruction-btn {
     text-align: right;
+    color: rgb(50,50,50);
+    font-size: 22px;
+    margin-top: 25px;
+    text-transform: capitalize;
+}
+
+#instruction-btn:hover,
+#instruction-btn:focus
+ {
+    color: gold;
+    transition: 0.2s;
+    transform: scale(1.05);
+    cursor: pointer;
 }
 
 .icon {
@@ -48,14 +70,12 @@ body {
 #life,
 #star {
     width: 25%;
-    display: flex;
     align-items:center;
 }
 
 #score {
     width: 50%;
     text-align: right;
-    margin-bottom: 0;
 }
 
 .icon {
@@ -75,6 +95,21 @@ canvas {
     text-transform: uppercase;
 }
 
+.control-btn:hover {
+    cursor: pointer;
+}
+
 .control-btn:focus {
     outline: none;
 }
+
+#instruction {
+    background-color: #fae7b5;
+    margin-left: 3px;
+    width: 300px;
+}
+
+.hide {
+    display: none;
+}
+

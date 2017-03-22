@@ -1,11 +1,13 @@
 //set basic unit for canvas. colW-column width, rowH - row height
 var colW = 101;
 var rowH = 83;
-//get life count and score count from HTML
+//get life count, score count and star count from HTML
 var lifeCount = document.getElementById("life-count");
 var numLife = Number(lifeCount.textContent);
 var scoreCount = document.getElementById("score-count");
 var numScore = Number(scoreCount.textContent);
+var starCount = document.getElementById("star-count");
+var numStar = Number(starCount.textContent);
 //audio source: http://opengameart.org/content/rpg-sound-pack
 var scoreUpSound = new Audio("sounds/coin.wav");
 var collisionSound = new Audio("sounds/collision.wav")
@@ -59,7 +61,7 @@ Player.prototype.reset = function() {
 };
 
 Player.prototype.checkWin = function() {
-    if (numScore >= 300) {
+    if (numScore >= 1000) {
         //change to win status
         winGame = true;
     }
@@ -75,7 +77,7 @@ Player.prototype.getScore = function() {
         this.checkWin();
         //score up
         if(!winGame) {
-            numScore += 100;
+            numScore += 50;
             scoreCount.textContent = numScore.toString();
 
             //check win;
@@ -153,12 +155,54 @@ Player.prototype.handleInput = function(key) {
     }
 };
 
+// item's contruction funciton
+var Item = function(x,y) {
+    // The image/sprite for our player
+    this.sprite = 'images/Star.png';
+    //set location
+    this.x = x;
+    this.y = y;
+};
+
+Item.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Item.prototype.update = function() {
+    this.checkScoreBonus();
+};
+
+Item.prototype.checkScoreBonus = function() {
+    if(this.y === player.y && this.x === player.x) {
+        //coin collect sound
+        scoreUpSound.play();
+        //star up
+        numStar += 1;
+        starCount.textContent = numStar.toString();
+        //score up
+        numScore += 100;
+        scoreCount.textContent = numScore.toString();
+        //item disappear
+        this.x = generateRandomStarX();
+        this.y = generateRandomY();
+
+        //check win: if win the game, stop the game
+        player.checkWin();
+        if(winGame){
+            stopGame();
+        }
+    }
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [];
 
 // Place the player object in a variable called player
 var player = new Player();
+
+// Place the star object in a variable called star
+var star = new Item(0, rowH*2-25);
 
 
 //function to make enemys with random X coordinate(-499 to 0)
@@ -168,9 +212,19 @@ function generateRandomX() {
     return randomX;
 }
 
+function generateRandomStarX() {
+    //set X position choice for star(on the column)
+    var XArray  =[0, colW, 2*colW, 3*colW, 4*colW];
+    //choose random number from 0,1,2,3,4
+    var randomXIndex = Math.floor((Math.random() * 5));
+    //randomly choose X from XArray
+    var randomStarX = XArray[randomXIndex];
+    return randomStarX;
+}
+
 //generate random Y coordinate(choose from 3 rows)
 function generateRandomY() {
-    //set Y position choice for enemys(on the rows)
+    //set Y position choice for enemys/star(on the rows)
     var YArray  =[rowH-25, 2*rowH-25, 3*rowH-25];
     //choose random number from 0,1,2
     var randomYIndex = Math.floor((Math.random() * 3));
@@ -244,6 +298,10 @@ function startGame(){
     //reset score to 0
     numScore = 0;
     scoreCount.textContent = numScore.toString();
+    //reset star to 0
+    numStar = 0;
+    starCount.textContent = numStar.toString();
+
     winGame = false;
     loseGame = false;
 
@@ -253,44 +311,49 @@ function startGame(){
     clearEnemies();
     //create 5 enemies
     makeEnemies(5);
+    //new star
+    star = new Item(0, rowH*2-25);
     //change the start button context
     startButton.textContent = "restart";
     pauseButton.textContent = "pause";
 }
 
 function pauseOrContinueGame(){
-    //"pause button" setting
-    if(pauseButton.textContent === "pause") {
-        //1. STORE speed
-        //clear original store speedArray
-        //and store all the speed for bugs in an array
-        speedArray = [];
-        allEnemies.forEach(function(bug){
-            speedArray.push(bug.speed);
-        });
+    //lock pause button when the game have not started yet.
+    if(startButton.textContent === "restart"){
+        //"pause button" setting
+        if(pauseButton.textContent === "pause") {
+            //1. STORE speed
+            //clear original store speedArray
+            //and store all the speed for bugs in an array
+            speedArray = [];
+            allEnemies.forEach(function(bug){
+                speedArray.push(bug.speed);
+            });
 
-        //2.stop the enemy: set the speed to 0
-        allEnemies.forEach(function(bug){
-            bug.speed = 0;
-        });
+            //2.stop the enemy: set the speed to 0
+            allEnemies.forEach(function(bug){
+                bug.speed = 0;
+            });
 
-        //3.disable the player's movement
-        disableKeys();
+            //3.disable the player's movement
+            disableKeys();
 
-        //4.change the button name to continue
-        pauseButton.textContent = "continue";
+            //4.change the button name to continue
+            pauseButton.textContent = "continue";
 
-    //"continue button" setting
-    } else {
-        //continue the enemy: assign the original speed
-        for (var i = 0; i < allEnemies.length; i++) {
-            allEnemies[i].speed = speedArray[i];
-        }
-        //enable the player's movement
-        enableKeys();
-        //change the button name to pause
-        pauseButton.textContent = "pause";
-    };
+        //"continue button" setting
+        } else {
+            //continue the enemy: assign the original speed
+            for (var i = 0; i < allEnemies.length; i++) {
+                allEnemies[i].speed = speedArray[i];
+            }
+            //enable the player's movement
+            enableKeys();
+            //change the button name to pause
+            pauseButton.textContent = "pause";
+        };
+    }
 }
 
 function stopGame() {
@@ -305,16 +368,6 @@ function stopGame() {
     //3. game over notice
     //will be handled in engine.js.
     //because need to render after canvas base
-
-    // //3.Game over notice
-    // player.checkWin();
-
-    // if(!winGame) {
-    //     createCanvasText("Game Over ... You final score is " + numScore + "! Click RESTART to play again");
-    // } else if (winGame) {
-    //     alert("congrats!");
-    //     win = false;
-    // }
 }
 
 //START/RESTART game
@@ -349,3 +402,15 @@ document.addEventListener("keyup",function(e){
         pauseOrContinueGame();
     };
 });
+
+//SHOW/HIDE instruction
+var instruction = document.getElementById("instruction");
+var instructionButton = document.getElementById("instruction-btn");
+instructionButton.onclick = function() {
+    instruction.classList.toggle("hide");
+    if(instructionButton.textContent === "see instructions >") {
+        instructionButton.textContent = "hide instructions <";
+    } else {
+        instructionButton.textContent = "see instructions >";
+    }
+};
