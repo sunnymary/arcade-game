@@ -113,3 +113,38 @@ canvas {
     display: none;
 }
 
+#instruction-note {
+    font-size: 18px;
+    font-family: arial;
+    padding: 0 10% 10% 10%;
+    text-align: left;
+}
+
+.instru-title {
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-size: 30px;
+    font-weight: normal;
+}
+
+.instru-subtitle {
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    margin-top: 20px;
+}
+
+.orange {
+    color: Coral;
+    text-shadow: 1px 1px white;
+}
+
+.arrow-image {
+    width: 200px;
+    margin: 0 auto;
+    display: block;
+}
+
+.note {
+    margin-top: 8px;
+    margin-bottom: 6px;
+}
