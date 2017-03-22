@@ -405,9 +405,12 @@ document.addEventListener("keyup",function(e){
 
 //SHOW/HIDE instruction
 var instruction = document.getElementById("instruction");
+var instructionText = document.getElementById("instruction-note");
 var instructionButton = document.getElementById("instruction-btn");
+
+//SLIDE intruction panel
 instructionButton.onclick = function() {
-    instruction.classList.toggle("hide");
+    instruction.classList.toggle("hide-box");
     if(instructionButton.textContent === "see instructions >") {
         instructionButton.textContent = "hide instructions <";
     } else {

@@ -104,47 +104,46 @@ canvas {
 }
 
 #instruction {
-    background-color: #fae7b5;
     margin-left: 3px;
-    width: 300px;
 }
 
-.hide {
+.hide-box {
     display: none;
 }
 
 #instruction-note {
+    background-color: rgb(238,232,170);
     font-size: 18px;
     font-family: arial;
-    padding: 0 10% 10% 10%;
+    padding: 10px 10% 10% 10%;
     text-align: left;
+    width:  300px;
 }
 
 .instru-title {
     text-transform: uppercase;
     margin-bottom: 5px;
-    font-size: 30px;
-    font-weight: normal;
+    margin-top: 30px;
+    font-size: 22px;
+    font-weight: bo;
+    color: Coral;
+    text-shadow: 1px 1px white;
 }
 
 .instru-subtitle {
     text-transform: uppercase;
     margin-bottom: 5px;
-    margin-top: 20px;
-}
-
-.orange {
-    color: Coral;
-    text-shadow: 1px 1px white;
+    margin-top: 22px;
 }
 
 .arrow-image {
     width: 200px;
     margin: 0 auto;
     display: block;
+    padding-top: 10px
 }
 
 .note {
-    margin-top: 8px;
+    margin-top: 10px;
     margin-bottom: 6px;
 }
