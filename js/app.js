@@ -12,7 +12,7 @@ var numStar = Number(starCount.textContent);
 
 //audio source: http://opengameart.org/content/rpg-sound-pack
 var scoreUpSound = new Audio("sounds/coin.wav");
-var collisionSound = new Audio("sounds/collision.wav")
+var collisionSound = new Audio("sounds/collision.wav");
 
 //set global variable - winGame, loseGame, to conveniently track game result
 //the inital value for both are "false"
@@ -78,7 +78,7 @@ Player.prototype.checkWin = function() {
         //change to win status
         winGame = true;
     }
-}
+};
 
 //condition and setting if get score
 Player.prototype.getScore = function() {
@@ -102,7 +102,7 @@ Player.prototype.getScore = function() {
         //player back to start place
         this.reset();
     }
-}
+};
 
 //update player
 Player.prototype.update = function() {
@@ -130,7 +130,7 @@ Player.prototype.checkCollision = function(){
             }
         }
     }
-}
+};
 
 //draw the player on the canvas
 Player.prototype.render = function() {
@@ -216,7 +216,7 @@ Item.prototype.checkScoreBonus = function() {
             stopGame();
         }
     }
-}
+};
 
 //instantiate objects==========================================================
 
@@ -287,7 +287,7 @@ function makeEnemies(n){
         allEnemies.push(bug);
     }
     return allEnemies;
-};
+}
 
 //when a bug run out of right boundary, assign it a new X, Y, and speed.
 //this function is called when update the enemy(when out of boundary, reset Enemies)
@@ -330,7 +330,7 @@ var keyListener = function(e) {
         //e.keyCode: 37/38/39/40
         //possible INPUT - allowedKeys[e.keyCode]:"left"/"up"/"right"/"down"
         player.handleInput(allowedKeys[e.keyCode]);
-}
+};
 
 //enable keyboard manipulation for player
 function enableKeys(){
@@ -408,7 +408,7 @@ function pauseOrContinueGame(){
             enableKeys();
             //change the button name to pause
             pauseButton.textContent = "pause";
-        };
+        }
     }
 }
 
@@ -442,7 +442,7 @@ document.addEventListener("keyup",function(e){
         //prevent default function for this key
         e.preventDefault();
         startGame();
-    };
+    }
 });
 
 //--------------------
@@ -461,7 +461,7 @@ document.addEventListener("keyup",function(e){
         console.log(e);
         e.preventDefault();
         pauseOrContinueGame();
-    };
+    }
 });
 
 //-----------------------
