@@ -4,6 +4,13 @@ Project Introduction: This project is initially created by Udacity. It is design
 
 How to Run
 ----------
+### First Method
+1. Download the repository.
+2. Unzip the files.
+3. Open the "index.html" in your browser to play the game.
+### Second Method
+Directly open the follow link and play:
+[https://sunnymary.github.io/arcade-game/](https://sunnymary.github.io/arcade-game/)
 
 How to Play
 -----------
