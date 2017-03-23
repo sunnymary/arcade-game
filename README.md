@@ -7,20 +7,21 @@ How to Run
 
 How to Play
 -----------
-GAME RULES
+### Game Rules
 
-1.TARGET: Reach 1000 points to win!
-2.SCORE RULES:
-Reach water: +50 pts
-Catch a star: +100 pts
-LIFE RULES:
+1. TARGET: Reach 1000 points to win!
+2. SCORE RULES:
+- Reach water: +50 pts
+- Catch a star: +100 pts
+3. LIFE RULES:
 If hit by a bug, lose 1 life. You have a maximum of 5 lives.
-OPERATION
-START/RESTART:
+
+### Operation
+1. START/RESTART:
 Click Start/Restart button or press "Enter" Key.
-PAUSE/CONTINUE:
+2. PAUSE/CONTINUE:
 Click Pause/Continue button or press "space" Key.
-PLAYER:
+3. PLAYER:
 Use the keyboard arrows to move the player
 
 Udacity's Instruction
