@@ -29,7 +29,7 @@ var Engine = (function(global) {
 
     canvas.width = 505;
     canvas.height = 606;
-    // doc.body.appendChild(canvas);
+    // insert canvas inside playInterface and before controlPanel
     playInterface.insertBefore(canvas,controlPanel);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -73,13 +73,7 @@ var Engine = (function(global) {
     }
 
     /* This function is called by main (our game loop) and itself calls all
-     * of the functions which may need to update entity's data. Based on how
-     * you implement your collision detection (when two entities occupy the
-     * same space, for instance when your character should die), you may find
-     * the need to add an additional function call here. For now, we've left
-     * it commented out - you may or may not want to implement this
-     * functionality this way (you could just implement collision detection
-     * on the entities themselves within your app.js file).
+     * of the functions which may need to update entity's data.
      */
     function update(dt) {
         updateEntities(dt);
@@ -88,7 +82,8 @@ var Engine = (function(global) {
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
-     * player object. These update methods should focus purely on updating
+     * player object. It will call the update function for star item if there is one.
+     * These update methods should focus purely on updating
      * the data/properties related to the object. Do your drawing in your
      * render methods.
      */
@@ -143,8 +138,11 @@ var Engine = (function(global) {
 
         renderEntities();
 
+        //call checkWin function for player to see whether the game wins.
+        //then draw/render corresponding game message on the canvas
         player.checkWin();
 
+        //if win the game, render winning message
         if(winGame) {
             //draw bottom rectanglar box
             createCanvasBox();
@@ -159,6 +157,7 @@ var Engine = (function(global) {
             createCanvasText("Congratulations! You win the game!",115,200,"orange");
             createCanvasText("click RESTART to play again", 115, 260);
 
+        //if lose the game, render losing message
         } else if(loseGame) {
             //draw bottom rectanglar box
             createCanvasBox();

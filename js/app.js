@@ -1,6 +1,7 @@
 //set basic unit for canvas. colW-column width, rowH - row height
 var colW = 101;
 var rowH = 83;
+
 //get life count, score count and star count from HTML
 var lifeCount = document.getElementById("life-count");
 var numLife = Number(lifeCount.textContent);
@@ -8,14 +9,19 @@ var scoreCount = document.getElementById("score-count");
 var numScore = Number(scoreCount.textContent);
 var starCount = document.getElementById("star-count");
 var numStar = Number(starCount.textContent);
+
 //audio source: http://opengameart.org/content/rpg-sound-pack
 var scoreUpSound = new Audio("sounds/coin.wav");
 var collisionSound = new Audio("sounds/collision.wav")
+
+//set global variable - winGame, loseGame, to conveniently track game result
+//the inital value for both are "false"
 var winGame = false;
 var loseGame = false;
 
-// Enemies our player must avoid
-var Enemy = function(x, y) {
+//Enemy=====================================================================
+//Constructor function for Enemies(our player must avoid these enemies)
+var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances
     // The image/sprite for our enemies
     this.sprite = 'images/enemy-bug.png';
@@ -25,10 +31,12 @@ var Enemy = function(x, y) {
     this.y = y;
 
     // Set the initial speed
-    // Randomly choose an integer between 50,100,150,200,250,300,350,400
-    var randomSpeed = (Math.floor((Math.random() * 8) + 1)) * 50;
-    this.speed = randomSpeed;
+    this.speed = speed;
 };
+
+//------------------------------------------------------
+//Enemy's prototypes
+//------------------------------------------------------
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -45,7 +53,8 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// player's contruction funciton
+//Player==========================================================
+//player's contructor funciton
 var Player = function() {
     // The image/sprite for our player
     this.sprite = 'images/char-boy.png';
@@ -54,12 +63,16 @@ var Player = function() {
     this.y = rowH*5-25;
 };
 
+//--------------------------------------
+//Player's prototypes
+//--------------------------------------
 //reset player's location
 Player.prototype.reset = function() {
     this.x = colW*2;
     this.y = rowH*5-25;
 };
 
+//set the condition and consequences to win the game
 Player.prototype.checkWin = function() {
     if (numScore >= 1000) {
         //change to win status
@@ -99,6 +112,7 @@ Player.prototype.update = function() {
     this.checkCollision();
 };
 
+//set collision condition and consequences
 Player.prototype.checkCollision = function(){
     for (var i = 0; i < allEnemies.length; i++) {
         if(this.y === allEnemies[i].y && this.x >= allEnemies[i].x - 50 && this.x < allEnemies[i].x + 50) {
@@ -118,10 +132,13 @@ Player.prototype.checkCollision = function(){
     }
 }
 
+//draw the player on the canvas
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//use keyboard to manipulate player
+//keep player inside boundary
 Player.prototype.handleInput = function(key) {
     //move left - one colW per move
     if(key === "left") {
@@ -155,7 +172,8 @@ Player.prototype.handleInput = function(key) {
     }
 };
 
-// item's contruction funciton
+//Item ================================================================
+// item's contructor funciton
 var Item = function(x,y) {
     // The image/sprite for our player
     this.sprite = 'images/Star.png';
@@ -164,14 +182,20 @@ var Item = function(x,y) {
     this.y = y;
 };
 
+//--------------------
+//Item's prototypes
+//--------------------
+//draw Item on the canvas
 Item.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//update Item
 Item.prototype.update = function() {
     this.checkScoreBonus();
 };
 
+//set collect Item condition and consequences
 Item.prototype.checkScoreBonus = function() {
     if(this.y === player.y && this.x === player.x) {
         //coin collect sound
@@ -194,7 +218,8 @@ Item.prototype.checkScoreBonus = function() {
     }
 }
 
-// Now instantiate your objects.
+//instantiate objects==========================================================
+
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [];
 
@@ -204,6 +229,11 @@ var player = new Player();
 // Place the star object in a variable called star
 var star = new Item(0, rowH*2-25);
 
+//Assistant functions===========================================================
+
+//---------------------------------
+//RANDOM Number generator funcitons
+//----------------------------------
 
 //function to make enemys with random X coordinate(-499 to 0)
 function generateRandomX() {
@@ -212,6 +242,7 @@ function generateRandomX() {
     return randomX;
 }
 
+//function to make random X coordinate(choose from 5 rows) for star creation
 function generateRandomStarX() {
     //set X position choice for star(on the column)
     var XArray  =[0, colW, 2*colW, 3*colW, 4*colW];
@@ -222,7 +253,7 @@ function generateRandomStarX() {
     return randomStarX;
 }
 
-//generate random Y coordinate(choose from 3 rows)
+//generate random Y coordinate(choose from 3 rows) for enemys and star creation
 function generateRandomY() {
     //set Y position choice for enemys/star(on the rows)
     var YArray  =[rowH-25, 2*rowH-25, 3*rowH-25];
@@ -233,38 +264,58 @@ function generateRandomY() {
     return randomY;
 }
 
+//generate random speed:choose an integer between 50,100,150,200,250,300,350,400
+function generateRandomSpeed() {
+    var randomSpeed = (Math.floor((Math.random() * 8) + 1)) * 50;
+    return randomSpeed;
+}
+
+//-------------------------------
+//functions to deal with enemies
+//-------------------------------
+
+//this function create a instance of Enemy(bug), assign it random X and Y,
+//then push it into allEnemies array. Number of the bugs can be decided when called.
 function makeEnemies(n){
     for (var i = 0; i < n; i++) {
         //generate random X and Y
         var randomX = generateRandomX();
         var randomY = generateRandomY();
+        var randomSpeed = generateRandomSpeed();
         //create a new instance of Enemy(bug) by assign random X and Y to it
-        var bug = new Enemy(randomX, randomY);
+        var bug = new Enemy(randomX, randomY, randomSpeed);
         allEnemies.push(bug);
     }
     return allEnemies;
 };
 
+//when a bug run out of right boundary, assign it a new X, Y, and speed.
+//this function is called when update the enemy(when out of boundary, reset Enemies)
 function resetEnemies(){
     allEnemies.forEach(function(bug){
         //generate random X and Y
         var randomX = generateRandomX();
         var randomY = generateRandomY();
+        var randomSpeed = generateRandomSpeed();
         //when the enemy runs out of right boundary, reset enemy loc
         if(bug.x > 5 * colW) {
             bug.x = randomX;
             bug.y = randomY;
+            bug.speed = randomSpeed;
         }
     });
 }
 
+//clear allEnemies Array
 function clearEnemies() {
     if(allEnemies) {
         allEnemies = [];
     }
 }
 
-
+//--------------------------------------------------
+//function to deal with keyboard movement for player
+//---------------------------------------------------
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -281,14 +332,19 @@ var keyListener = function(e) {
         player.handleInput(allowedKeys[e.keyCode]);
 }
 
+//enable keyboard manipulation for player
 function enableKeys(){
     document.addEventListener('keyup', keyListener);
 }
 
+//disable keyboard manipulation for player
 function disableKeys(){
     document.removeEventListener('keyup', keyListener);
 }
 
+//----------------------------------------------
+//functions to start/pause/continue/stop game
+//----------------------------------------------
 function startGame(){
     //set player into original place
     player.reset();
@@ -370,7 +426,11 @@ function stopGame() {
     //because need to render after canvas base
 }
 
+//===============================================================================
+
+//------------------
 //START/RESTART game
+//-------------------
 //1.set click event to start button
 var startButton = document.getElementById("start");
 startButton.addEventListener("click", startGame);
@@ -379,14 +439,15 @@ startButton.addEventListener("click", startGame);
 document.addEventListener("keyup",function(e){
     console.log(e.keyCode);
     if(e.keyCode === 13) {
-        console.log(e);
+        //prevent default function for this key
         e.preventDefault();
         startGame();
     };
 });
 
-
+//--------------------
 //PAUSE/CONTINUE game
+//---------------------
 //1.create a speed array to store speed info for bugs
 var speedArray = [];
 
@@ -403,14 +464,17 @@ document.addEventListener("keyup",function(e){
     };
 });
 
+//-----------------------
 //SHOW/HIDE instruction
+//------------------------
 var instruction = document.getElementById("instruction");
-var instructionText = document.getElementById("instruction-note");
 var instructionButton = document.getElementById("instruction-btn");
 
-//SLIDE intruction panel
+//when click on instruction button, show/hide instruction panel
+//by toggling "hide-box" class.
 instructionButton.onclick = function() {
     instruction.classList.toggle("hide-box");
+    //Change the text content for instruction button.
     if(instructionButton.textContent === "see instructions >") {
         instructionButton.textContent = "hide instructions <";
     } else {
